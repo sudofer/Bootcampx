@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 cohort = process.argv.slice(2)[0];
-
+const values = [`${cohort}`]
 pool.query(`select
 teachers.name as teacher,
 cohorts.name as cohort,
@@ -17,9 +17,11 @@ from teachers
 join assistance_requests on teachers.id = teacher_id 
 join students on students.id = student_id
 join cohorts on cohorts.id = cohort_id
-WHERE cohorts.name = '${cohort}'
+WHERE cohorts.name = $1
 GROUP BY teachers.name, cohorts.name
 ORDER BY teachers.name;
-`).then(res => {
+`,values).then(res => {
   console.log(res.rows);
+}).catch(err => {
+  console.log(error);
 })
